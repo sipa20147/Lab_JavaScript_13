@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Cписок запланированных дел</title>
+    <meta charset="utf-8" />
+
+    <style type="text/css">
+        body {
+            background: rgb(255, 255, 255);
+        }
+
+        input {
+            text-align: center;
+        }
+
+        #Enter {
+            padding: 10px;
+            color: rgb(0, 0, 0);
+        }
+
+        #Block {
+            margin-left: 100px;
+        }
+
+        .addNewBotton {
+            border-width: 2px 0;
+            border-radius: 6px;
+            border-style: solid none;
+            border-color: #FDBE33 #000 #D77206;
+            transition: 0.2s;
+            padding: 10px;
+            background: linear-gradient(#F3AE0F, #E38916) #E38916;
+            color: rgb(255, 255, 255);
+        }
+
+        UL {
+            font-size: 25px;
+            margin: 20px 10px 30px 50px;
+        }
+
+        li {
+            list-style-type: none;
+        }
+
+
+        .flag {
+            margin: 10px 10px 10px 10px;
+            color: rgb(98, 0, 255);
+        }
+    </style>
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+</head>
+
+<body>
+    <div class="header">
+        <h1 align="center">Cписок запланированных дел</h1>
+        <ul id="UL"></ul><br>
+    </div>
+    <div id="Block">
+        <input type="text" id="Enter" placeholder="Введите новую задачу">
+        <span onclick="newElementTask()" class="addNewBotton">Добавить</span>
+    </div>
+    <script>
+        var IdForNew = 0;
+        var editMyId = "";
+        var valueMyId = "";
+        var faded = 400;
+        var myTaskArguments = ["Сделать зарядку", "Почистить зубы", "Убрать кровать", "Выгулять собаку", "Позавтракать", "Выпить чашку кофе", "Написать список дел", "Собраться на работу"];
+        for (i = 0; i < myTaskArguments.length; i++) {
+            newGetAssignments(myTaskArguments[i]);
+        }
+
+
+        function newGetAssignments(getText) {
+            var li = document.createElement("li");
+            var span;
+            span = document.createElement("SPAN");
+            txt = document.createTextNode("✔");
+            span.className = "flag";
+            span.onclick = function () {
+                var div = this.parentElement;
+                var txt = div.children[1];
+                if (txt.style.textDecoration == "line-through") {
+                    txt.style.textDecoration = "";
+                    txt.style.background = "white";
+                }
+                else {
+                    txt.style.textDecoration = "line-through";
+                    txt.style.color = "pink";
+                }
+            };
+            span.appendChild(txt);
+            li.appendChild(span);
+            span = createNewGetText(getText, li);
+            li.appendChild(span);
+            document.getElementById("UL").appendChild(li);
+        }
+        function newElementTask() {
+            var edit = document.getElementById("Enter");
+            var inputValue = edit.value;
+            if (inputValue === '') {
+                return;
+            }
+            newGetAssignments(inputValue);
+            edit.value = "";
+        }
+
+        function createNewGetText(getText) {
+            var span = document.createElement("SPAN");
+            var txt = document.createTextNode(getText);
+            span.appendChild(txt);
+            span.ondblclick = function () {
+                var thisData = this.innerHTML,
+                    $el = $('<input type="text" class="in-edit-text" onkeyup="reEdit(event)"/>');
+                editMyId = this.id;
+                valueMyId = this.innerText;
+                $(this).fadeToggle(faded, "linear",
+                    function () {
+                        $(this).replaceWith($el);
+                        $el.val(thisData).focus();
+                    });
+            };
+            return span;
+        }
+        function fadeEdit(span) {
+            return new Promise(function (resolve, reject) {
+                $('.in-edit-text').fadeToggle(faded, "linear", () => { resolve(span) });
+            })
+        }
+        function reEdit(event) {
+            var x = event.key;
+            var span = null;
+            if (x == "Enter") {
+                var txt = $('.in-edit-text').val();
+                if (txt == "")
+                    span = createNewGetText(valueMyId);
+                else
+                    span = createNewGetText(txt);
+            }
+            else if (x == "Escape") {
+                span = createNewGetText(valueMyId);
+            }
+            if (span) {
+                fadeEdit(span).then(
+                    span => $('.in-edit-text').replaceWith(span)
+                );
+            }
+        }
+
+
+
+
+    </script>
+</body>
+
+</html>

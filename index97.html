@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ru" xml:lang="ru">
+	<head>
+		<title>example-5-1-1</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<script src="http://code.jquery.com/jquery-latest.js" type="text/javascript"></script>
+		<script type="text/javascript">
+		$(function () {
+            $("div:first").data("employee", {
+                name: "Купец", age: 35,
+                phone: "+375 44 772-21-49",
+                group: "20bsuinf"
+            });
+            $("button:first").click(function () {
+                $("p span:eq(0)").text($("div:first")
+                   .data("employee").name);
+                $("p span:eq(1)").text($("div:first")
+                    .data("employee").age);
+                $("p span:eq(2)").text($("div:first")
+                    .data("employee").phone);
+                $("p span:eq(3)").text($("div:first")
+                    .data("employee").group);
+            });
+            $("button:last").click(function () {
+                $("p span").empty();
+                $("div:first").removeData("employee");
+            });
+        });
+		</script>
+	</head>
+<body>
+	<div></div>
+	<p>Студент: <span></span>, возраст <span></span> лет, телефон: <span></span></p>
+	<button>Получить данные</button><button>Удалить данные</button>
+</body>
+</html>
